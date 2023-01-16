@@ -1,0 +1,4 @@
+"0","estimates <- predict(model_forward,test)"
+"0","train_estimates <- predict(model_forward,train)"
+"0","train_estimates[train_estimates<0] <- 0"
+"0","train$estimate_sales <- train_estimates"

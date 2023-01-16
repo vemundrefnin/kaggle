@@ -1,0 +1,6 @@
+"0","data_subset <- train[sample(nrow(train), 100000), ]"
+"0","ggplot(data_subset, aes(x=id, y=sales)) +"
+"0","  geom_point() + "
+"0","  geom_line(aes(x=id, y=estimate_sales, color=""estimate_sales"")) +"
+"0","  theme_classic()+"
+"0","  scale_color_manual(values = c(""estimate_sales"" = ""red""))"

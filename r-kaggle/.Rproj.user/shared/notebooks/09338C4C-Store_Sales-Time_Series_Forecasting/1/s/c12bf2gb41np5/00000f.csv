@@ -1,0 +1,23 @@
+"0","library(tidyverse)  # data manipulation and visualization"
+"0","library(modelr)     # provides easy pipeline modeling functions"
+"0","library(broom)      # helps to tidy up model outputs"
+"0","library(car)"
+"2","Loading required package: carData
+"
+"2","
+Attaching package: ‘car’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    recode
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    some
+
+"
+"0","library(corrplot)"
+"2","corrplot 0.92 loaded
+"

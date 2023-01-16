@@ -1,0 +1,87 @@
+---
+title: "Kaggle Store Sales - Time Series Forecasting"
+author: "Vemund Edvard Refnin"
+date: "15 Jan 2023"
+output: pdf_document
+---
+
+```{r load packages }
+library(tidyverse)  # data manipulation and visualization
+library(modelr)     # provides easy pipeline modeling functions
+library(broom)      # helps to tidy up model outputs
+library(car)
+library(corrplot)
+```
+
+```{r Load data}
+train <- read_csv("../Store Sales - Time Series Forecasting/data/train_data_combined.csv") 
+test <- read_csv("../Store Sales - Time Series Forecasting/data/test_data_combined.csv") 
+```
+```{r preparing_data}
+train$store_nbr <- as.factor(train$store_nbr)
+train$cluster <- as.factor(train$cluster)
+summary(train)
+
+test$store_nbr <- as.factor(test$store_nbr)
+test$cluster <- as.factor(test$cluster)
+```
+
+```{r making_model}
+model_interprence_only <- lm(sales ~ 1 , data = train)
+
+# Perform forward stepwise regression
+
+model_forward <- step(model_interprence_only, direction="forward", scope = sales ~ year + month + day + cluster + type + state + city + onpromotion + store_nbr + date + family)
+summary(model_forward)
+tidy(model_forward)
+glance(model_forward)
+
+
+```
+
+````{r evaluate}
+# calculate the VIF for each predictor variable
+vif(model_forward)
+
+# Correlation
+predictors <- train[,c("year", "month", "day", "onpromotion")]
+cor_matrix <- cor(predictors)
+corrplot(cor_matrix, method = "square")
+
+
+
+```
+
+````{r predict}
+estimates <- predict(model_forward,test)
+train_estimates <- predict(model_forward,train)
+train_estimates[train_estimates<0] <- 0
+train$estimate_sales <- train_estimates
+```
+
+````{r consturcting_test_results}
+estimates[estimates<0] <- 0
+test$sales = estimates
+test[c("id", "sales")]
+
+```
+
+````{r save_results}
+write.csv(test[c("id", "sales")], "data/test_results.csv", row.names=FALSE)
+```
+
+````{r visualizing}
+data_subset <- train[sample(nrow(train), 100000), ]
+ggplot(data_subset, aes(x=id, y=sales)) +
+  geom_point() + 
+  geom_line(aes(x=id, y=estimate_sales, color="estimate_sales")) +
+  theme_classic()+
+  scale_color_manual(values = c("estimate_sales" = "red"))
+  
+
+#estimates
+ggplot(data=test, aes(x=date, y=sales))+
+  geom_line()
+  
+
+```

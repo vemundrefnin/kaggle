@@ -1,0 +1,31 @@
+---
+title: "Kaggle Store Sales - Time Series Forecasting"
+author: "Vemund Edvard Refnin"
+date: "15 Jan 2023"
+output: pdf_document
+---
+
+```{r load packages }
+library(tidyverse)  # data manipulation and visualization
+library(modelr)     # provides easy pipeline modeling functions
+library(broom)      # helps to tidy up model outputs
+```
+
+```{r Load data}
+train <- read_csv("../Store Sales - Time Series Forecasting/data/train_data_combined.csv") 
+summary(train)
+```
+```{r your_turn}
+model_interprence_only <- lm(sales ~ 1 , data = train)
+
+# Perform forward stepwise regression
+
+model_forward <- step(model_interprence_only, direction="forward", scope = sales ~ year + month + day + cluster + type + state + city)
+summary(model_forward)
+
+tidy(model_forward)
+
+glance(model_forward)
+
+
+```

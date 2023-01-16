@@ -1,0 +1,1 @@
+"0","model_interprence_only <- lm(sales ~ 1 , data = train)"
